@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env micropython
 from ev3dev2.sound import Sound
 
 sound = Sound()
