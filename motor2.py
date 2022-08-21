@@ -7,4 +7,4 @@ from ev3dev2.led import Leds
 
 
 m = LargeMotor(OUTPUT_A)
-m.on_for_degrees(SpeedPercent(100), 90)
+m.on_for_degrees(SpeedPercent(100), -90)
