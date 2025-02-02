@@ -4,6 +4,7 @@
 import socket
 import json
 import time
+import sys
 
 def send_message(s, msg_type, message_data):
     message = json.dumps([msg_type, message_data])
@@ -18,9 +19,16 @@ def get_battery():
         return voltage
 
 
-HOST = 'monitor'
-PORT = 50007              # The same port as used by the server
+HOST = sys.argv[1]
+PORT = int(sys.argv[2])
+name = sys.argv[3]
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((HOST, PORT))
+print('Sending Hello')
+send_message(s, 'Hello', dict(msg='Hello', name=name))
+print('Sending Message')
 send_message(s, 'Message', dict(msg='Hello world ev3'))
-send_message(s, 'Battery', dict(level=get_battery()))
+while True:
+    print('Sending battery')
+    send_message(s, 'Battery', dict(level=get_battery()))
+    time.sleep(1)

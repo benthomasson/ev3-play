@@ -6,10 +6,10 @@ import json
 import _thread
 import time
 import queue
+import sys
 
 
-HOST = ''                 # Symbolic name meaning all available interfaces
-OUTPUT_PORT = 50008              # Arbitrary non-privileged port
+HOST = '0.0.0.0'                 # Symbolic name meaning all available interfaces
 
 q = queue.Queue()
 
@@ -21,10 +21,11 @@ def send_message(s, message):
     s.sendall(message)
 
 
-def output_thread():
+def output_thread(host, port):
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.bind((HOST, OUTPUT_PORT))
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+        s.bind((host, port))
         s.listen(1)
         while True:
             conn, addr = s.accept()
@@ -42,6 +43,7 @@ def output_thread():
                     print(msg_type, msg_data)
                     break
                 while True:
+                    print('Waiting for data')
                     data = q.get()
                     print(data)
                     send_message(conn, data)
@@ -53,6 +55,8 @@ def main():
         time.sleep(1)
 
 if __name__ == "__main__":
-    _thread.start_new_thread(output_thread, tuple())
+    host = sys.argv[1]
+    port = int(sys.argv[2])
+    _thread.start_new_thread(output_thread, (host, port))
     main()
 

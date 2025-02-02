@@ -26,16 +26,15 @@ def get_battery():
         return voltage
 
 
-HOST = 'monitor'
-PORT = 50007              # The same port as used by the server
-
 def main(argv):
 
-    name = argv[0]
+    host = argv[0]
+    port = int(argv[1])             # The same port as used by the server
+    name = argv[2]
 
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect((HOST, PORT))
+    s.connect((host, port))
     send_message(s, 'Hello', dict(msg='Hello', name=name))
     send_message(s, 'Battery', dict(level=get_battery()))
 

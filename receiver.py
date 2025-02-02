@@ -14,15 +14,15 @@ def send_message(s, msg_type, message_data):
     s.sendall('{length:04x}'.format(length=length).encode())
     s.sendall(message.encode())
 
-HOST = 'localhost'
-PORT = 50008             # The same port as used by the server
 
 def main(argv):
 
-    name = argv[0]
+    host = argv[0]
+    port = int(argv[1])             # The same port as used by the server
+    name = argv[2]
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect((HOST, PORT))
+    s.connect((host, port))
     send_message(s, 'Hello', dict(msg='Hello', name=name))
 
     while True:
